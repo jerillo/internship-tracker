@@ -4,6 +4,7 @@ const app = express();
 // Require routes
 const indexRoutes = require('./routes/index');
 
+// View engine setup
 app.use(express.static(__dirname + '/public'));
 app.set('view engine', 'ejs');
 
