@@ -4,10 +4,12 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
     username: String,
     password: String,
-    internships: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Internship'
-    }]
+    internships: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Internship'
+        }
+    ]
 });
 
 module.exports = mongoose.model('User', UserSchema);
