@@ -1,8 +1,8 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const methodOverride = require('method-override');
 const passport = require('passport');
+require('dotenv').config()
 
 // Require routes
 const indexRoutes = require('./routes/index');
