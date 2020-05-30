@@ -2,7 +2,9 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const passport = require('passport');
-require('dotenv').config()
+const LocalStrategy = require('passport-local');
+const User = require('./models/user')
+require('dotenv').config();
 
 // Require routes
 const indexRoutes = require('./routes/index');
@@ -19,7 +21,19 @@ app.use(express.urlencoded({
 // Routes
 app.use('/', indexRoutes);
 
-// Passport config here
+// Passport Configuration
+app.use(
+    require('express-session')({
+        secret: process.env.SECRET,
+        resave: false,
+        saveUninitialized: false
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.listen(process.env.PORT || 3000, () => {
     console.log('Server is listening on port 3000');
