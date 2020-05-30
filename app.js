@@ -11,10 +11,10 @@ mongoose.connect('mongodb://localhost:27017/internships', {
     useNewUrlParser: true,
     useUnifiedTopology: true
 });
+app.use(express.json())
 app.use(express.urlencoded({
     extended: true
 }));
-app.use(methodOverride('_method'));
 
 // Routes
 app.use('/', indexRoutes);
