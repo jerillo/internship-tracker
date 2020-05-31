@@ -25,9 +25,14 @@ router.route('/new').post((req, res) => {
     user,
   });
 
-  newInternship.save()
-    .then(() => {res.json('New Internship Added!')})
-    .catch(err => res.status(400).json('Error: ' + err));
+  await newInternship.save();
+  User.update({username: user.username}, {push: {internships: newInternship._id}},
+    (err, doc) => {
+      if (err) {
+          console.log(err);
+      }
+          console.log(doc);
+    });
 });
 
 module.exports = router;
