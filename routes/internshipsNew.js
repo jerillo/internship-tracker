@@ -1,6 +1,6 @@
-const router = require('express').Router()
-let Internship = require('../models/internship')
-let User = require('../models/user')
+const router = require('express').Router();
+let Internship = require('../models/internship');
+let User = require('../models/user');
 
 router.route('/').post((req, res) => {
   const company = req.body.company;
