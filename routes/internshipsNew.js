@@ -8,31 +8,24 @@ router.route('/').post((req, res) => {
   const status = req.body.status;
   const dateApplied = Date.parse(req.body.dateApplied);
   const primaryContact = req.body.primaryContact;
-  const user = User.find({username: req.body.username}, (err, data) => {
-      if (err) {
-        res.json('Error: ' + err);
-        return;
-      }
-      return data[0];
-  });
-
-  const newInternship = new Internship({
-    company,
-    position,
-    status,
-    dateApplied,
-    primaryContact,
-    user,
-  });
-
-  await newInternship.save();
-  User.update({username: user.username}, {push: {internships: newInternship._id}},
-    (err, doc) => {
-      if (err) {
-          console.log(err);
-      }
-          console.log(doc);
-    });
+  User.find({username: req.body.username})
+    .then((user) => {
+        const newInternship = new Internship({
+          company,
+          position,
+          status,
+          dateApplied,
+          primaryContact,
+          user
+        });
+        newInternship.save()
+          .then(() => res.json('New internship saved!'))
+          .catch(err => res.status(400).json('Error: ' + err));
+        User.update({username: user.username}, {$push: {internships: newInternship._id}})
+          .then(() => res.json('Internship successfully saved with user!'))
+          .catch(err => res.status(400).json('Error: ' + err));
+    })
+    .catch(err => res.status(400).json('Error: ' + err));
 });
 
 module.exports = router;
