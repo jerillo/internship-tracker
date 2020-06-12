@@ -38,11 +38,30 @@ passport.use(
 			clientSecret: process.env.GOOGLE_CLIENT_SECRET,
 			callbackURL: '/auth/google/callback'
 		},
-		(accessToken, refreshToken, profile, cb) => {
-			// console.log(JSON.stringify(profile, null, 2));
-			let user = { ...profile };
-			console.log(user);
-			return cb(null, profile);
+		(accessToken, refreshToken, profile, done) => {
+			console.log(profile);
+			User.findOne({ 'google.id': profile.id }, (err, user) => {
+				if (err) {
+					return done(err);
+				}
+				if (!user) {
+					user = new User({
+						id: profile.id,
+						name: profile.displayName,
+						email: profile.emails[0].value,
+						provider: 'google',
+						google: profile._json
+					});
+					user.save((err) => {
+						if (err) {
+							console.error(err);
+						}
+						return done(err, user);
+					});
+				} else {
+					return done(err, user);
+				}
+			});
 		}
 	)
 );
@@ -63,7 +82,6 @@ app.get(
 );
 
 app.get('/user', (req, res) => {
-	console.log('getting user data!');
 	res.send(user);
 });
 
