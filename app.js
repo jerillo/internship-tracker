@@ -39,8 +39,7 @@ passport.use(
 			callbackURL: '/auth/google/callback'
 		},
 		(accessToken, refreshToken, profile, done) => {
-			console.log(profile);
-			User.findOne({ 'google.id': profile.id }, (err, user) => {
+			User.findOne({ id: profile.id }, (err, user) => {
 				if (err) {
 					return done(err);
 				}
@@ -49,8 +48,8 @@ passport.use(
 						id: profile.id,
 						name: profile.displayName,
 						email: profile.emails[0].value,
-						provider: 'google',
-						google: profile._json
+						username: profile.emails[0].value,
+						provider: 'google'
 					});
 					user.save((err) => {
 						if (err) {

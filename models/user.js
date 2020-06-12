@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
 	id: String,
 	name: String,
 	email: String,
+	username: String,
 	internships: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
