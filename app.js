@@ -100,6 +100,10 @@ app.get(
 // Defining routes
 app.use('/', require('./routes/index'));
 app.use('/auth', require('./routes/auth'));
+app.use('/internship/new', require('./routes/internshipsNew'));
+app.use('/internship/delete', require('./routes/internshipDelete'));
+app.use('/internship/update', require('./routes/internshipUpdate'));
+app.use('/internship', require('./routes/internshipFind'));
 
 app.listen(process.env.PORT || 3000, () => {
 	console.log('Server is listening on port 3000');

@@ -8,7 +8,7 @@ router.route('/').post((req, res) => {
   const status = req.body.status;
   const dateApplied = Date.parse(req.body.dateApplied);
   const primaryContact = req.body.primaryContact;
-  User.find({username: req.body.username})
+  User.findOne({username: req.body.username})
     .then((user) => {
         const newInternship = new Internship({
           company,
@@ -19,11 +19,16 @@ router.route('/').post((req, res) => {
           user
         });
         newInternship.save()
-          .then(() => res.json('New internship saved!'))
-          .catch(err => res.status(400).json('Error: ' + err));
-        User.update({username: user.username}, {$push: {internships: newInternship._id}})
-          .then(() => res.json('Internship successfully saved with user!'))
-          .catch(err => res.status(400).json('Error: ' + err));
+          .then(() => {
+            User.findOneAndUpdate({_id: user._id}, {$push: {internships: newInternship}}, {useFindAndModify: false}, 
+              function (err, sucess) {
+                if (err) {
+                  res.status(400).json(err);
+                } else {
+                  res.json('internship ' + newInternship._id + ' saved with ' + user.username);
+                }
+              });
+          })
     })
     .catch(err => res.status(400).json('Error: ' + err));
 });
